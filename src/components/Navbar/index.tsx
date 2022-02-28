@@ -22,7 +22,7 @@ const NavBar = () => {
         <NavLinkComponent href="/">
           <div className="flex items-center space-x-2">
             <img className="w-6 h-6 inline-block" src="./images/logos/logo.png" />
-            <span className="text-lg font-bold uppercase">TakaProtocol</span>
+            <span className="text-lg font-bold uppercase">kvn2046</span>
           </div>
         </NavLinkComponent>
       </div>

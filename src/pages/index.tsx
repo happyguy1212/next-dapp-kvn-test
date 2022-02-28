@@ -3,45 +3,15 @@ import { useState, useEffect } from 'react'
 import Web3 from 'web3'
 import { Web3Exception } from '../interface/web3'
 
-import ButtonGroup from '../components/Swap/ButtonGroup'
-import CurrencyGroup from '../components/Swap/CurrencyGroup'
-import Description from '../components/Swap/Description'
-import PricePanel from '../components/Swap/PricePanel'
-import SelectTokenModal from '../components/Swap/SelectTokenModal'
+import Description from '../components/Main/Description'
 import ACTION_STATUS from '../config/constants/Liquidity'
-import SelectChainModal from '../components/Swap/SelectChainModal'
+import ApiGroup from '../components/Main/ApiGroup'
 
 declare let window: any
 
-const Swap = () => {
-  const [tokenModalOpen, setTokenModalOpen] = useState<boolean>(false)
-  const [chianModalOpen, setChainModalOpen] = useState<boolean>(false)
-
-  const [web3, setWeb3] = useState<Web3 | null>(null)
-  const [address, setAddress] = useState<string>('')
-
-  useEffect(() => {
-    if (!window.ethereum) {
-      console.error('Please install MetaMask')
-      return
-    }
-
-    window.ethereum
-      .request({ method: 'eth_requestAccounts' })
-      .then((accounts: string[]) => {
-        setAddress(accounts[0])
-        let w3 = new Web3(window.ethereum)
-        setWeb3(w3)
-      })
-      .catch((err: Web3Exception) => console.log(err.code))
-  }, [])
-
-  const handleChainModalOpen = (isOpen: boolean) => {
-    setChainModalOpen(isOpen)
-  }
-
-  const handleTokenModalOpen = (isOpen: boolean) => {
-    setTokenModalOpen(isOpen)
+const Main = () => {
+  const handleQuery = (params: any) => {
+    console.log(params)
   }
 
   return (
@@ -49,7 +19,7 @@ const Swap = () => {
       <div className="card w-3/4 sm:w-3/4 md:w-1/2 lg:w-1/3 border border-gray-300 p-0 mx-auto">
         <div className="p-0 card-body">
           <div className="card-title px-6 pt-6 pb-2 text-blue-dark border-b">
-            <h3>CROSS-CHAIN TRANSFER</h3>
+            <h3>SMART CONTRACT API</h3>
             <span className="text-sm">
               <span
                 className="tooltip tooltip-right"
@@ -59,45 +29,19 @@ const Swap = () => {
                 className="w-4 h-4 inline-block"
                 src="./images/icons/question.svg"
               />
-              &nbsp;Transfer tokens between different chains
+              &nbsp;Interating with several smart contracts
             </span>
           </div>
           <div className="justify-center mt-2 px-4 pb-4">
             <div className="form-control w-full">
-              <CurrencyGroup
-                handleChainModalOpen={handleChainModalOpen}
-                handleTokenModalOpen={handleTokenModalOpen}
-              />
-              <div className="w-full text-center font-bold my-4">&darr;</div>
-              <CurrencyGroup
-                handleChainModalOpen={handleChainModalOpen}
-                handleTokenModalOpen={handleTokenModalOpen}
-              />
+              <ApiGroup handleQuery={handleQuery} />
             </div>
-
-            <div className="w-full flex justify-end mt-2">
-              <span className="text-sm font-bold flex btn btn-sm btn-ghost normal-case">
-                Advanced Options
-                <img className="w-6 h-6" src="./images/icons/arrow-down-black.svg" />
-              </span>
-            </div>
-            <ButtonGroup status={ACTION_STATUS.SWAP} />
           </div>
         </div>
       </div>
       <Description />
-
-      <SelectChainModal
-        open={chianModalOpen}
-        handleTokenModalOpen={handleChainModalOpen}
-      />
-
-      <SelectTokenModal
-        open={tokenModalOpen}
-        handleTokenModalOpen={handleTokenModalOpen}
-      />
     </div>
   )
 }
 
-export default Swap
+export default Main
