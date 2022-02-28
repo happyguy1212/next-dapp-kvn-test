@@ -1,0 +1,28 @@
+/*
+***
+* GLOBAL STYLE
+***
+* styles/global.scss
+* styles for global and theme
+***
+*/
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import '@fontsource/raleway';
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Raleway';
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
