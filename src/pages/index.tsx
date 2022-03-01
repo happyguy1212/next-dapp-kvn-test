@@ -1,18 +1,26 @@
 import { useState, useEffect } from 'react'
 
-import Web3 from 'web3'
-import { Web3Exception } from '../interface/web3'
-
 import Description from '../components/Main/Description'
-import ACTION_STATUS from '../config/constants/Liquidity'
 import ApiGroup from '../components/Main/ApiGroup'
+import abi from '../abis/ERC721EXT.json'
+import { apiResolver } from 'next/dist/server/api-utils'
 
 declare let window: any
 
 const Main = () => {
+  const [apis, setApis] = useState<any>([])
+
   const handleQuery = (params: any) => {
     console.log(params)
   }
+
+  useEffect(() => {
+    const abi_apis = abi.filter((func) => {
+      return func.type === 'function' && func.stateMutability === 'view'
+    })
+
+    setApis(abi_apis)
+  }, [])
 
   return (
     <div className="w-full pt-10">
@@ -33,8 +41,10 @@ const Main = () => {
             </span>
           </div>
           <div className="justify-center mt-2 px-4 pb-4">
-            <div className="form-control w-full">
-              <ApiGroup handleQuery={handleQuery} />
+            <div className="form-control w-full space-y-2">
+              {apis.map((api: any) => {
+                return <ApiGroup api={api} handleQuery={handleQuery} />
+              })}
             </div>
           </div>
         </div>
