@@ -8,7 +8,7 @@ import ContractView from '../interface/ContractView'
 declare let window: any
 
 const Main = () => {
-  const [apis, setApis] = useState<ContractView>([])
+  const [apis, setApis] = useState<ContractView[]>([])
 
   const handleQuery = (params: any) => {
     console.log(params)
