@@ -3,12 +3,12 @@ import { useState, useEffect } from 'react'
 import Description from '../components/Main/Description'
 import ApiGroup from '../components/Main/ApiGroup'
 import abi from '../abis/ERC721EXT.json'
-import { apiResolver } from 'next/dist/server/api-utils'
+import ContractView from '../interface/ContractView'
 
 declare let window: any
 
 const Main = () => {
-  const [apis, setApis] = useState<any>([])
+  const [apis, setApis] = useState<ContractView>([])
 
   const handleQuery = (params: any) => {
     console.log(params)
@@ -23,8 +23,9 @@ const Main = () => {
   }, [])
 
   return (
-    <div className="w-full pt-10">
-      <div className="card w-3/4 sm:w-3/4 md:w-1/2 lg:w-1/3 border border-gray-300 p-0 mx-auto">
+    <div className="w-full pt-2 space-y-2">
+      <Description />
+      <div className="card w-4/5 border border-gray-300 p-0 mx-auto">
         <div className="p-0 card-body">
           <div className="card-title px-6 pt-6 pb-2 text-blue-dark border-b">
             <h3>SMART CONTRACT API</h3>
@@ -42,14 +43,13 @@ const Main = () => {
           </div>
           <div className="justify-center mt-2 px-4 pb-4">
             <div className="form-control w-full space-y-2">
-              {apis.map((api: any) => {
+              {abi.map((api) => {
                 return <ApiGroup api={api} handleQuery={handleQuery} />
               })}
             </div>
           </div>
         </div>
       </div>
-      <Description />
     </div>
   )
 }
