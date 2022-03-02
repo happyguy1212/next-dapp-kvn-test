@@ -2,25 +2,12 @@ import { useState, useEffect } from 'react'
 
 import Description from '../components/Main/Description'
 import ApiGroup from '../components/Main/ApiGroup'
-import abi from '../abis/ERC721EXT.json'
-import ContractView from '../interface/ContractView'
 
-declare let window: any
+import useApis from '../hooks/useApis'
+import { useProvider, useSigner, useApiTest } from '../hooks/useEthers'
 
 const Main = () => {
-  const [apis, setApis] = useState<ContractView[]>([])
-
-  const handleQuery = (params: any) => {
-    console.log(params)
-  }
-
-  useEffect(() => {
-    const abi_apis = abi.filter((func) => {
-      return func.type === 'function' && func.stateMutability === 'view'
-    })
-
-    setApis(abi_apis)
-  }, [])
+  const apis = useApis()
 
   return (
     <div className="w-full pt-2 space-y-2">
@@ -43,8 +30,8 @@ const Main = () => {
           </div>
           <div className="justify-center mt-2 px-4 pb-4">
             <div className="form-control w-full space-y-2">
-              {abi.map((api) => {
-                return <ApiGroup api={api} handleQuery={handleQuery} />
+              {apis.map((api, index) => {
+                return <ApiGroup key={api.name} index={index} api={api} />
               })}
             </div>
           </div>

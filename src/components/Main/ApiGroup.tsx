@@ -3,11 +3,11 @@ import ContractView from '../../interface/ContractView'
 
 interface CurrencyGroupProps {
   children?: ReactNode
+  index: number
   api: ContractView
-  handleQuery: (infos: any) => void
 }
 
-const ApiGroup = ({ children, api, handleQuery }: CurrencyGroupProps) => {
+const ApiGroup = ({ children, index, api }: CurrencyGroupProps) => {
   const [visibleContent, setVisibleContent] = useState<boolean>(false)
   const [params, setParams] = useState<any>({})
 
@@ -16,7 +16,7 @@ const ApiGroup = ({ children, api, handleQuery }: CurrencyGroupProps) => {
   }
 
   const handleQueryClick = () => {
-    handleQuery(params)
+    console.log(params)
   }
 
   return (
@@ -25,13 +25,14 @@ const ApiGroup = ({ children, api, handleQuery }: CurrencyGroupProps) => {
         className="py-2 px-4 bg-white text-blue-dark font-bold cursor-pointer"
         onClick={handleVisibleContent}
       >
-        {api.name}
+        {index + 1}. {api.name}
       </div>
       {visibleContent ? (
         <div className="p-2 space-y-2 border border-t-gray">
           {api.inputs?.map((info: any) => {
             return (
               <input
+                key={`${api.name}-${info.name}`}
                 type="text"
                 placeholder={`${info.name} (${info.type})`}
                 className="input input-bordered w-full input-sm"
