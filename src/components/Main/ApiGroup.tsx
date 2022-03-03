@@ -1,8 +1,6 @@
-import { ReactNode, useState } from 'react'
-import { useProvider } from '../../hooks/useEthers'
+import { ChangeEvent, ReactNode, useState } from 'react'
+import { useContract } from '../../hooks/useEthers'
 import ContractView from '../../interface/ContractView'
-import { ERC721EXT } from '../../generated/ERC721EXT'
-import { ERC721EXT__factory } from '../../generated'
 
 interface CurrencyGroupProps {
   children?: ReactNode
@@ -11,25 +9,43 @@ interface CurrencyGroupProps {
 }
 
 const ApiGroup = ({ children, index, api }: CurrencyGroupProps) => {
-  const provider = useProvider()
+  const contract = useContract()
   const [visibleContent, setVisibleContent] = useState<boolean>(false)
-  const [params, setParams] = useState<any>({})
+  const [params, setParams] = useState<(number | string)[]>([])
+  const [result, setResult] = useState<string>('')
 
   const handleVisibleContent = () => {
     setVisibleContent(!visibleContent)
   }
 
-  const handleQueryClick = () => {
-    if (provider === null) {
-      console.log('provider is not connected')
-      return
-    }
-    const contract = ERC721EXT__factory.connect(
-      '0x08B447f91a8D70DE8FCf5b1870cb252C4f39C2bD',
-      provider
-    )
+  const handleChangeParam = (event: ChangeEvent<HTMLInputElement>) => {
+    const name = event.target.name
+    const value = event.target.value
+    let param_array = [...params]
+    const index = parseInt(name)
+    param_array[index] = value
+    setParams(param_array)
+  }
 
-    console.log(contract.name())
+  const getPropertyType = (type: string) => {
+    if (type.indexOf('uint') === 0) return 'number'
+    return 'text'
+  }
+
+  const handleQueryClick = () => {
+    console.log(api.name)
+    setResult('Pending')
+    // @ts-ignore:next-line
+    contract[api.name]()
+      // @ts-ignore:next-line
+      .then((response) => {
+        let result = response
+        if (typeof response === 'object') result = JSON.stringify(response)
+        setResult(result)
+      })
+      .catch(() => {
+        setResult('Error')
+      })
   }
 
   return (
@@ -42,12 +58,14 @@ const ApiGroup = ({ children, index, api }: CurrencyGroupProps) => {
       </div>
       {visibleContent ? (
         <div className="p-2 space-y-2 border border-t-gray">
-          {api.inputs?.map((info: any) => {
+          {api.inputs?.map((info: any, index: number) => {
             return (
               <input
                 key={`${api.name}-${info.name}`}
-                type="text"
+                name={`${index}`}
+                type={getPropertyType(info.type)}
                 placeholder={`${info.name} (${info.type})`}
+                onChange={handleChangeParam}
                 className="input input-bordered w-full input-sm"
               />
             )
@@ -58,6 +76,10 @@ const ApiGroup = ({ children, index, api }: CurrencyGroupProps) => {
           >
             Query
           </button>
+          <div className="text-brand font-bold p-2">
+            <span>Result: </span>
+            <span>{result}</span>
+          </div>
         </div>
       ) : (
         <></>
