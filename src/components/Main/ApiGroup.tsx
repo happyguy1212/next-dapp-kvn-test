@@ -1,5 +1,8 @@
 import { ReactNode, useState } from 'react'
+import { useProvider } from '../../hooks/useEthers'
 import ContractView from '../../interface/ContractView'
+import { ERC721EXT } from '../../generated/ERC721EXT'
+import { ERC721EXT__factory } from '../../generated'
 
 interface CurrencyGroupProps {
   children?: ReactNode
@@ -8,6 +11,7 @@ interface CurrencyGroupProps {
 }
 
 const ApiGroup = ({ children, index, api }: CurrencyGroupProps) => {
+  const provider = useProvider()
   const [visibleContent, setVisibleContent] = useState<boolean>(false)
   const [params, setParams] = useState<any>({})
 
@@ -16,7 +20,16 @@ const ApiGroup = ({ children, index, api }: CurrencyGroupProps) => {
   }
 
   const handleQueryClick = () => {
-    console.log(params)
+    if (provider === null) {
+      console.log('provider is not connected')
+      return
+    }
+    const contract = ERC721EXT__factory.connect(
+      '0x08B447f91a8D70DE8FCf5b1870cb252C4f39C2bD',
+      provider
+    )
+
+    console.log(contract.name())
   }
 
   return (

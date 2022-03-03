@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
+import { JsonRpcSigner, Web3Provider, EtherscanProvider } from '@ethersproject/providers';
 
 declare let window:any;
 
@@ -9,8 +9,9 @@ export const useProvider = () => {
 
     useEffect(() => {
         const provider = new ethers.providers.Web3Provider(
-            window.ethereum, "any"
+            window.ethereum, "rinkerby"
         );
+
         setProvider(provider)
     }, [])
 
